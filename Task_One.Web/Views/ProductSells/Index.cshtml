@@ -1,0 +1,78 @@
+﻿@model List<ProductSell>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Sells report</h1>
+<hr />
+<form method="get">
+    <div class="form-group">
+        <label for="email">Sold Date : </label>
+        <select class="form-control" name="soldDate" asp-items="@ViewBag.SoldDates">
+            <option value="0">Please Select One Date : </option>
+        </select>
+        @*<button type="submit" class="btn btn-primary">Submit</button>*@
+    </div>
+@*</form>
+<form>*@
+    <div class="form-group">
+        <label for="email">Price : </label>
+        <select class="form-control" name="price" asp-items="@ViewBag.Prices">
+            <option value="0">Please Select One Price : </option>
+        </select>
+        @*<button type="submit" class="btn btn-primary">Submit</button>*@
+    </div>
+@*</form>
+<form>*@
+    <div class="form-group">
+        <label for="email">Store : </label>
+        <select class="form-control" name="storeId" asp-items="@ViewBag.Stores">
+            <option value="0">Please Select One Store : </option>
+        </select>
+        @*<button type="submit" class="btn btn-primary">Submit</button>*@
+    </div>
+@*</form>*@
+<button type="submit" class="btn btn-primary">Submit</button>
+<a class="btn btn-primary" asp-controller="ProductSells" asp-action="Index">Show All Records</a>
+</form>
+
+<br />
+<hr />
+
+<table class="table table-bordered table-striped" id="productSells">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Store</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th>Operations</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Product</td>
+                <td>@item.Store</td>
+                <td>@item.Price</td>
+                <td>@item.SoldDate.ToShortDateString()</td>
+                <td>
+                    <a href="/ProductSells/getchart/@item.ProductId/@item.StoreId" class="btn btn-primary">Show Price Chart on this Store</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#productSells').DataTable();
+        });
+    </script>
+}
+@section Styles{
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+}

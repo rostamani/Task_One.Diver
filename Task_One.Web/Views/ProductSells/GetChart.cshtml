@@ -1,0 +1,55 @@
+﻿@using System.Globalization
+@using Newtonsoft.Json
+@model Chart
+@{
+    ViewData["Title"] = "GetChart";
+}
+
+<h3>Price history of product @Model.ProductName in this store @Model.StoreName</h3>
+<p>
+    <a class="btn btn-primary" href="/productsells">Back</a>
+</p>
+
+<hr />
+
+<div id="chartContainer">
+
+</div>
+
+@section Scripts{
+
+    <script src="~/js/canvasjs.min.js"></script>
+    <script src="~/js/jquery.canvasjs.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var dataString = '@Html.Raw(JsonConvert.SerializeObject(Model.Points.Select(p=>new { x=0,year=p.SoldDate.Year,month=p.SoldDate.Month,day=p.SoldDate.Day,y=p.Price})))';
+            var dataJson = JSON.parse(dataString);
+            for (var i = 0; i < dataJson.length; i++) {
+                dataJson[i].x = new Date(dataJson[i].year, dataJson[i].month, dataJson[i].day);
+            }
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: false,
+                title: {
+                    text: "Price History"
+                },
+                axisX: {
+                    valueFormatString: "DD MMM"
+                },
+                axisY: {
+                    title: "Price",
+                    scaleBreaks: {
+                        autoCalculate: true
+                    }
+                },
+                data: [{
+                    type: "line",
+                    xValueFormatString: "DD MMM",
+                    color: "#F08080",
+                    dataPoints: dataJson
+                }]
+            });
+            chart.render();
+        });
+    </script>
+}
+
